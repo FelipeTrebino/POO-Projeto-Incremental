@@ -1,12 +1,15 @@
-
+import java.util.ArrayList;
+import java.util.List;
 
 public class Sala {
     private Cinema cinema;
     private int numero;
+    private List<Sessao> sessoes;
 
     public Sala(Cinema cinema, int numero) {
         this.cinema = cinema;
         this.numero = numero;
+        this.sessoes = new ArrayList<>();
     }
 
     public Cinema getCinema() {
@@ -28,5 +31,16 @@ public class Sala {
     @Override
     public String toString() {
         return "sala : " + numero;
+    }
+
+    public void adicionarSessao(Sessao sessao) {
+        sessoes.add(sessao);
+    }
+
+    public void exibirDetalhes(){
+        System.out.println("Sala: " +
+                "\n " + cinema.getNome() +
+                ", n°: " + numero +
+                "\n Programação: " + sessoes);
     }
 }

@@ -1,3 +1,6 @@
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 public class Main {
     public static void main(String[] args) {
 
@@ -13,6 +16,10 @@ public class Main {
         cinema1.adicionarSala(sala1);
         cinema1.adicionarSala(sala2);
         cinema1.exibirDetalhes();
+
+        Sessao sessao1 = new Sessao(sala1,filme1, LocalDate.of(2024,07,31), LocalTime.of(16,40));
+        sala1.adicionarSessao(sessao1);
+        sala1.exibirDetalhes();
 
 
 
