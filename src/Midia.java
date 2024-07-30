@@ -5,7 +5,6 @@ abstract class Midia {
     private int duracaoEmMinutos;
     private String sinopse;
     private String diretor;
-    private String elenco;
     private int anoDeLancamento;
     private String classificacaoIndicativa;
     private String nacionalidade;
@@ -66,18 +65,11 @@ abstract class Midia {
         this.nacionalidade = nacionalidade;
     }
 
-    public String getElenco() {
-        return elenco;
-    }
 
-    public void setElenco(String elenco) {
-        this.elenco = elenco;
-    }
 
     public void exibirDetalhes() {
         System.out.println(titulo +
                 "\nDe " + diretor + ". " +
-                "Com " + elenco + ". " +
                 nacionalidade + ". " + anoDeLancamento +
                 ". " + sinopse + " " + duracaoEmMinutos + " min. " +
                 classificacaoIndicativa + ".");
