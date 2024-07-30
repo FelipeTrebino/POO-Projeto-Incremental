@@ -7,6 +7,13 @@ public class Main {
         Documentario documentario1 = new Documentario("Paris is Burning",78,"Uma crônica da cena drag queen nova-iorquina dos anos 1980, focando nos bailes, dança vogue, ambições e sonhos daqueles que proporcionaram calor e vitalidade para uma era.","Jennie Livingston", 1990,"18 anos", "EUA");
         documentario1.exibirDetalhes();
 
+        Cinema cinema1 = new Cinema("Cine Lumière - Salvador Shopping", "Av. Tancredo Neves, 3133 - Caminho das Árvores, Salvador");
+        Sala sala1 = new Sala(cinema1, 01);
+        Sala sala2 = new Sala(cinema1, 02);
+        cinema1.adicionarSala(sala1);
+        cinema1.adicionarSala(sala2);
+        cinema1.exibirDetalhes();
+
 
 
 
