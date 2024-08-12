@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import models.*;
 
-
-
 public class Main {
 
     private static ArrayList<Usuario> usuarios = new ArrayList<>();
@@ -52,8 +50,6 @@ public class Main {
         
         scanner.close(); 
     }
-    
-    
     
     public static void exibirMenuPrincipal(Scanner scanner){
         
@@ -395,7 +391,6 @@ public class Main {
         Sessao sessao1 = new Sessao(sala1,filme1, LocalDate.of(2024,07,31), LocalTime.of(16,40));
         sala1.adicionarSessao(sessao1);
         sala1.exibirDetalhes();
-        
     }
 
     private static void exibirMenuUsuarios(Scanner scanner) {

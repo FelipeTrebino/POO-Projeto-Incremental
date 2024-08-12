@@ -10,13 +10,44 @@ public class Sessao {
     private LocalDate data;
     private LocalTime horario;
     private ArrayList<Poltrona> poltronas;
+    private static final int quantidadePoltronas = 50;
+    private static final int quantidadePoltronasAcessiveis = 5;
 
+
+    // Construtor com quantidade personalizada de poltronas
+    public Sessao(Sala sala, Midia midia, LocalDate data, LocalTime horario, int quantidadePoltronas, int quantidadePoltronasAcessiveis) {
+        this.sala = sala;
+        this.midia = midia;
+        this.data = data;
+        this.horario = horario;
+        this.poltronas = new ArrayList<Poltrona>();
+        
+        // Lógica para criar as poltronas de cada sessão
+        
+        for(int i = 0; i < quantidadePoltronas; i++){
+            this.poltronas.add(new Poltrona(String.valueOf(i + 1), true, false));
+        }
+        for(int i = 0; i < quantidadePoltronasAcessiveis; i++){
+            this.poltronas.add(new Poltrona(String.valueOf(quantidadePoltronas + i + 1), true, false));
+        }
+    }
+
+    // Construtor com quantidade padrão de poltronas
     public Sessao(Sala sala, Midia midia, LocalDate data, LocalTime horario) {
         this.sala = sala;
         this.midia = midia;
         this.data = data;
         this.horario = horario;
         this.poltronas = new ArrayList<Poltrona>();
+        
+        // Lógica para criar as poltronas de cada sessão
+        
+        for(int i = 0; i < Sessao.quantidadePoltronas; i++){
+            this.poltronas.add(new Poltrona(String.valueOf(i + 1), true, true));
+        }
+        for(int i = 0; i < Sessao.quantidadePoltronasAcessiveis; i++){
+            this.poltronas.add(new Poltrona(String.valueOf(Sessao.quantidadePoltronas + i + 1), true, true));
+        }
     }
 
     public Sala getSala() {
@@ -51,6 +82,11 @@ public class Sessao {
         this.horario = horario;
     }
 
+    public ArrayList<Poltrona> getPoltronas() {
+        return poltronas;
+    }
+
+    
     @Override
     public String toString() {
         return midia.getTitulo() + ", " +
