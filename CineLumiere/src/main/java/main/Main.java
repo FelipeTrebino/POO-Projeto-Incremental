@@ -186,7 +186,7 @@ public class Main {
                 
                 switch (option) {
                     case 1:
-                        // Exibir catálogo
+                        exibirCatalogo();
                         break;
                     case 0:
                         System.out.println("Voltando ..."); 
@@ -210,10 +210,10 @@ public class Main {
                 
                 switch (option) {
                     case 1:
-                        // Exibir catálogo
+                        exibirCatalogo();
                         break;
                     case 2:
-                        // Cadastrar mídia
+                        exibirMenuCadastroMidia(scanner);
                         break;
                     case 0:
                         System.out.println("Voltando ..."); 
@@ -241,6 +241,7 @@ public class Main {
                 
                 
                 System.out.println("\n--- Sessões ---");
+                System.out.println("- " + cinema_selecionado.getNome() + " -");
                 System.out.println("1. Exibir sessões");
                 System.out.println("2. Comprar ingresso");
                 System.out.println("3. Trocar cinema");
@@ -273,7 +274,7 @@ public class Main {
                 // Aqui opções que serão exibidas para o administrador
                 
                 
-                System.out.println("\n--- Midias ---");
+                System.out.println("\n--- Sessões ---");
                 System.out.println("1. Exibir sessões");
                 System.out.println("2. Cadastrar sessão");
                 System.out.println("3. Gerenciar sessões");
@@ -310,57 +311,25 @@ public class Main {
         int option;
         
         do{
-            if(usuario_logado instanceof Cliente){
-                
-                // Aqui opções que serão exibidas para o cliente
-                
-                
-                System.out.println("\n--- Ingressos ---");
-                System.out.println("1. Meus ingressos");
-                // Pode ter mais opções
-                System.out.println("0. Voltar");
-                System.out.print("Escolha uma opção: ");
-                
-                option = scanner.nextInt();
-                scanner.nextLine();
+            System.out.println("\n--- Ingressos ---");
+            System.out.println("1. Meus ingressos");
+            // Pode ter mais opções
+            System.out.println("0. Voltar");
+            System.out.print("Escolha uma opção: ");
 
-                switch (option) {
-                    case 1:
-                        // Exibir ingressos do cliente
-                        break;
-                    case 0:
-                        System.out.println("Voltando ..."); 
-                        return;
-                    default:
-                        System.out.println("Opção inválida. Tente novamente."); 
-                }
+            option = scanner.nextInt();
+            scanner.nextLine();
 
-            } else {
-                // Aqui opções que serão exibidas para o administrador
-                
-                
-                System.out.println("\n--- Ingressos ---");
-                System.out.println("1. Exibir ingressos ativos"); // Ingressos para sessões ainda ativas
-                // Pode ter mais opções
-                System.out.println("0. Voltar");
-                System.out.print("Escolha uma opção: ");
-                 
-                
-                option = scanner.nextInt();
-                scanner.nextLine();
-                
-                switch (option) {
-                    case 1:
-                        
-                        break;
-                    case 0:
-                        System.out.println("Voltando ..."); 
-                        return;
-                    default:
-                        System.out.println("Opção inválida. Tente novamente."); 
-                }
-                
-            }
+            switch (option) {
+                case 1:
+                    // Exibir ingressos do cliente
+                    break;
+                case 0:
+                    System.out.println("Voltando ..."); 
+                    return;
+                default:
+                    System.out.println("Opção inválida. Tente novamente."); 
+            } 
         } while (option != 0);
     }
     
@@ -433,7 +402,6 @@ public class Main {
         int option;
         
         do{
-            
             System.out.println("\n--- Usuários ---");
             System.out.println("1. Listar usuários do sistema");
             System.out.println("2. Visualizar usuário");
@@ -464,4 +432,51 @@ public class Main {
             
         } while (option != 0);
     }  
+
+    private static void exibirCatalogo() {
+        System.out.println("\n--- Catálogo Cine Lumiere ---");
+        for(Midia midia : midias){
+            System.out.print(" - ");
+            midia.exibirDetalhes(); 
+            System.out.print("\n");
+        }
+    }
+
+    private static void exibirMenuCadastroMidia(Scanner scanner) {
+        System.out.println("\n--- Cadastro de Mídia ---");
+        System.out.print("Selecione o tipo de mídia: \n1 - Filme \n2 - Documentário\n");
+        int categoria = scanner.nextInt();
+        scanner.nextLine();  // Consumir a nova linha
+
+        System.out.print("Título: ");
+        String titulo = scanner.nextLine();
+        System.out.print("Duração (em minutos): ");
+        int duracaoEmMinutos = scanner.nextInt();
+        scanner.nextLine();  // Consumir a nova linha
+        System.out.print("Sinopse: ");
+        String sinopse = scanner.nextLine();
+        System.out.print("Diretor: ");
+        String diretor = scanner.nextLine();
+        System.out.print("Ano de Lançamento: ");
+        int anoDeLancamento = scanner.nextInt();
+        scanner.nextLine();  // Consumir a nova linha
+        System.out.print("Classificação Indicativa: ");
+        String classificacaoIndicativa = scanner.nextLine();
+        System.out.print("Nacionalidade: ");
+        String nacionalidade = scanner.nextLine();
+
+        if (categoria == 1) {
+            System.out.print("Elenco: ");
+            String elenco = scanner.nextLine();
+            Filme filme = new Filme(titulo, duracaoEmMinutos, sinopse, diretor,  elenco, anoDeLancamento, classificacaoIndicativa, nacionalidade);
+            midias.add(filme);
+            System.out.println("Filme cadastrado com sucesso!");
+        } else if (categoria == 2) {
+            Documentario documentario = new Documentario(titulo, duracaoEmMinutos, sinopse, diretor, anoDeLancamento, classificacaoIndicativa, nacionalidade);
+            midias.add(documentario);
+            System.out.println("Documentário cadastrado com sucesso!");
+        } else {
+            System.out.println("Categoria inválida. Mídia não cadastrada.");
+        }
+    }
 }
