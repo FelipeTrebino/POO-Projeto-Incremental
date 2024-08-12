@@ -1,17 +1,22 @@
+package models;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 
 public class Sessao {
     private Sala sala;
     private Midia midia;
     private LocalDate data;
     private LocalTime horario;
+    private ArrayList<Poltrona> poltronas;
 
     public Sessao(Sala sala, Midia midia, LocalDate data, LocalTime horario) {
         this.sala = sala;
         this.midia = midia;
         this.data = data;
         this.horario = horario;
+        this.poltronas = new ArrayList<Poltrona>();
     }
 
     public Sala getSala() {

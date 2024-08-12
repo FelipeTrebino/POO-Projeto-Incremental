@@ -1,0 +1,467 @@
+package main;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Scanner;
+import models.*;
+
+
+
+public class Main {
+
+    private static ArrayList<Usuario> usuarios = new ArrayList<>();
+    private static Usuario usuario_logado;
+    private static Cinema cinema_selecionado;
+    private static ArrayList<Cinema> cinemas = new ArrayList<>();
+    private static ArrayList<Midia> midias = new ArrayList<>();
+    
+    public static void main(String[] args) {        
+        definicoesIniciais(); // Aqui são feitas as definições inicias como cadastro do cinema, salas, adm etc
+        
+        Scanner scanner = new Scanner(System.in);
+       
+        int option;
+        
+        do {
+            exibirMenuLogin();
+            option = scanner.nextInt();
+            scanner.nextLine();
+            switch (option) {
+                case 1:
+                    login(scanner);
+                    if(usuario_logado != null){ // Usuario Logado, o próximo menu pode ser acessado
+                        option = 0;
+                    }
+                    break;
+                case 2:
+                    cadastrarCliente(scanner);
+                    if(usuario_logado != null){ // Usuario Logado, o próximo menu pode ser acessado
+                        option = 0;
+                    }
+                    break;
+                case 0:
+                    logout();
+                    break;
+                default:
+                    System.out.println("Opção inválida. Tente novamente."); 
+            }
+        } while(option != 0);
+        
+        exibirMenuPrincipal(scanner);
+        
+        scanner.close(); 
+    }
+    
+    
+    
+    public static void exibirMenuPrincipal(Scanner scanner){
+        
+        int option;
+        
+        do{
+            
+            if(usuario_logado instanceof Cliente){
+                System.out.println("\n--- Menu ---");
+                System.out.println("1. Mídias");
+                System.out.println("2. Sessões");
+                System.out.println("3. Ingressos");
+                System.out.println("0. Sair");
+                System.out.print("Escolha uma opção: ");
+
+                option = scanner.nextInt();
+                scanner.nextLine();
+                
+                switch (option) {
+                    case 1:
+                        exibirMenuMidias(scanner);
+                        break;
+                    case 2:
+                        exibirMenuSessoes(scanner);
+                        break;
+                    case 3:
+                        exibirMenuIngressos(scanner);
+                        break;
+                    case 0:
+                        logout();
+                        break;
+                    default:
+                        System.out.println("Opção inválida. Tente novamente."); 
+                }
+
+            } else {
+                System.out.println("\n--- Menu ---");
+                System.out.println("1. Usuarios");
+                System.out.println("2. Mídias");
+                System.out.println("3. Sessões");
+                System.out.println("0. Sair");
+                System.out.print("Escolha uma opção: ");
+                
+                option = scanner.nextInt();
+                scanner.nextLine();
+                
+                switch (option) {
+                    case 1:
+                        exibirMenuUsuarios(scanner);
+                        break;
+                    case 2:
+                        exibirMenuMidias(scanner);
+                        break;
+                    case 3:
+                        exibirMenuSessoes(scanner);
+                        break;
+                    case 0:
+                        logout();
+                        break;
+                    default:
+                        System.out.println("Opção inválida. Tente novamente."); 
+                }
+                
+            }
+        } while (option != 0);
+    }
+    
+    public static void exibirMenuLogin(){
+        System.out.println("\n--- Cine Lumiére ---");
+        System.out.println("1. Login");
+        System.out.println("2. Cadastro");
+        System.out.println("0. Sair");
+        System.out.print("Escolha uma opção: ");
+    }
+    
+    private static void cadastrarCliente(Scanner scanner) {
+        System.out.println("\n--- Novo cliente ---");
+        System.out.print("Digite o email: ");
+        String email = scanner.nextLine();
+        System.out.print("Digite o seu cpf: ");
+        String cpf = scanner.nextLine();
+        System.out.print("Digite a senha: ");
+        String senha = scanner.nextLine();
+        
+        // Deveria ter uma validação se este email/cpf já existe
+        
+        Cliente cliente = new Cliente(cpf, email, senha);
+        
+        usuarios.add(cliente);
+        System.out.println("Cliente cadastrado com sucesso!");
+        
+        usuario_logado = cliente;
+    }
+     
+    private static void login(Scanner scanner) {
+        System.out.println("\n--- Login ---");
+        System.out.print("Digite o email: ");
+        String email = scanner.nextLine();
+        System.out.print("Digite a senha: ");
+        String senha = scanner.nextLine();
+        
+        for (Usuario user : usuarios) { // Aplicação de polimorfismo , neste caso, o usuário pode ser adm ou cliente
+            if (user.getEmail().equals(email) && user.checkSenha(senha)) {
+                System.out.println("Login bem-sucedido!");
+                usuario_logado = user;
+                return;
+            }
+        }
+        System.out.println("Nome de usuário ou senha incorretos.");
+    } 
+
+    private static void exibirMenuMidias(Scanner scanner) {
+        int option;
+        
+        do{
+            if(usuario_logado instanceof Cliente){
+                
+                // Aqui opções que serão exibidas para o cliente
+                
+                
+                System.out.println("\n--- Midias ---");
+                System.out.println("1. Exibir catálogo");
+                // Pode ter mais opções
+                System.out.println("0. Voltar");
+                System.out.print("Escolha uma opção: ");
+                
+
+                option = scanner.nextInt();
+                scanner.nextLine();
+                
+                switch (option) {
+                    case 1:
+                        // Exibir catálogo
+                        break;
+                    case 0:
+                        System.out.println("Voltando ..."); 
+                        return;
+                    default:
+                        System.out.println("Opção inválida. Tente novamente."); 
+                }
+
+            } else {
+                // Aqui opções que serão exibidas para o administrador
+
+                System.out.println("\n--- Midias ---");
+                System.out.println("1. Exibir catálogo");
+                System.out.println("2. Cadastrar mídia");
+                // Pode ter mais opções
+                System.out.println("0. Voltar");
+                System.out.print("Escolha uma opção: ");                 
+                
+                option = scanner.nextInt();
+                scanner.nextLine();
+                
+                switch (option) {
+                    case 1:
+                        // Exibir catálogo
+                        break;
+                    case 2:
+                        // Cadastrar mídia
+                        break;
+                    case 0:
+                        System.out.println("Voltando ..."); 
+                        return;
+                    default:
+                        System.out.println("Opção inválida. Tente novamente."); 
+                }
+                
+            }
+        } while (option != 0);
+    }
+
+    private static void exibirMenuSessoes(Scanner scanner) {
+        int option;    
+        do{
+            if(usuario_logado instanceof Cliente){
+                        
+                // O usuário precisa escolher o cinema para ver as sessões
+                
+                if(cinema_selecionado == null){
+                    exibirMenuCinema(scanner);
+                }
+                
+                // Aqui opções que serão exibidas para o cliente
+                
+                
+                System.out.println("\n--- Sessões ---");
+                System.out.println("1. Exibir sessões");
+                System.out.println("2. Comprar ingresso");
+                System.out.println("3. Trocar cinema");
+                // Pode ter mais opções
+                System.out.println("0. Voltar");
+                System.out.print("Escolha uma opção: ");
+                
+                
+                option = scanner.nextInt();
+                scanner.nextLine();
+                
+                switch (option) {
+                    case 1:
+                        // Exibir sessões
+                        break;
+                    case 2:
+                        // Menu compra de ingresso
+                        break;
+                    case 3:
+                        exibirMenuCinema(scanner);
+                        break;
+                    case 0:
+                        System.out.println("Voltando ..."); 
+                        return;
+                    default:
+                        System.out.println("Opção inválida. Tente novamente."); 
+                }
+
+            } else {
+                // Aqui opções que serão exibidas para o administrador
+                
+                
+                System.out.println("\n--- Midias ---");
+                System.out.println("1. Exibir sessões");
+                System.out.println("2. Cadastrar sessão");
+                System.out.println("3. Gerenciar sessões");
+                // Pode ter mais opções
+                System.out.println("0. Voltar");
+                System.out.print("Escolha uma opção: ");
+                
+                
+                option = scanner.nextInt();
+                scanner.nextLine();
+                
+                switch (option) {
+                    case 1:
+                        // Exibir sessões disponíveis
+                        break;
+                    case 2:
+                        // Menu para cadastro de sessão
+                        break;
+                    case 3:
+                        // Menu para gerenciar sessão (alterar/excluir)
+                        break;
+                    case 0:
+                        System.out.println("Voltando ..."); 
+                        return;
+                    default:
+                        System.out.println("Opção inválida. Tente novamente."); 
+                }
+                
+            }
+        } while (option != 0);  
+    }
+
+    private static void exibirMenuIngressos(Scanner scanner) {
+        int option;
+        
+        do{
+            if(usuario_logado instanceof Cliente){
+                
+                // Aqui opções que serão exibidas para o cliente
+                
+                
+                System.out.println("\n--- Ingressos ---");
+                System.out.println("1. Meus ingressos");
+                // Pode ter mais opções
+                System.out.println("0. Voltar");
+                System.out.print("Escolha uma opção: ");
+                
+                option = scanner.nextInt();
+                scanner.nextLine();
+
+                switch (option) {
+                    case 1:
+                        // Exibir ingressos do cliente
+                        break;
+                    case 0:
+                        System.out.println("Voltando ..."); 
+                        return;
+                    default:
+                        System.out.println("Opção inválida. Tente novamente."); 
+                }
+
+            } else {
+                // Aqui opções que serão exibidas para o administrador
+                
+                
+                System.out.println("\n--- Ingressos ---");
+                System.out.println("1. Exibir ingressos ativos"); // Ingressos para sessões ainda ativas
+                // Pode ter mais opções
+                System.out.println("0. Voltar");
+                System.out.print("Escolha uma opção: ");
+                 
+                
+                option = scanner.nextInt();
+                scanner.nextLine();
+                
+                switch (option) {
+                    case 1:
+                        
+                        break;
+                    case 0:
+                        System.out.println("Voltando ..."); 
+                        return;
+                    default:
+                        System.out.println("Opção inválida. Tente novamente."); 
+                }
+                
+            }
+        } while (option != 0);
+    }
+    
+    // Aqui deve conter qualquer operação que deve ser feita quando o cliente sair do sistema
+    private static void logout(){
+        System.out.println("Saindo...");
+    }
+
+    private static void exibirMenuCinema(Scanner scanner) {
+        
+        
+        cinema_selecionado = null;
+        
+        int option;
+        
+        System.out.println("\n--- Selecione o cinema quer quer visualizar ---");
+        
+        for (int i = 1; i <= cinemas.size(); i++){
+                Cinema cinema = cinemas.get(i - 1);
+                System.out.print("1. ");
+                cinema.exibirDetalhes();   
+        }
+        
+        do {
+            
+            option = scanner.nextInt();
+            scanner.nextLine();
+            
+            if (option <= cinemas.size()){
+                cinema_selecionado = cinemas.get(option - 1);
+                System.out.println("Cinema selecionado: " + cinema_selecionado.getNome());
+                return;
+            } else {
+                System.out.println("Opção inválida. Tente novamente."); 
+            }
+            
+        } while(cinema_selecionado != null);
+    }
+
+    private static void definicoesIniciais() {
+        Cinema cinema1 = new Cinema("Cine Lumière - Salvador Shopping", "Av. Tancredo Neves, 3133 - Caminho das Árvores, Salvador");
+        Sala sala1 = new Sala(cinema1, 01);
+        Sala sala2 = new Sala(cinema1, 02);
+        cinema1.adicionarSala(sala1);
+        cinema1.adicionarSala(sala2);
+        cinemas.add(cinema1);
+        
+        Administrador adm = new Administrador("12345678900", "adm@email", "12345");
+        usuarios.add(adm);
+        
+        Cliente cliente = new Cliente("00987654321", "client1@email", "12345");
+        usuarios.add(cliente);
+        
+        Filme filme1 = new Filme("A Mosca",96,"O excêntrico cientista Seth Brundle completa seu dispositivo de teletransporte e decide testar a eficácia do experimento em si próprio. Sem que ele perceba, uma mosca cai no aparelho durante o processo e provoca uma fusão dele com o inseto. Contudo, ele pensa que o experimento foi um sucesso, até que começa a notar que as células da mosca estão tomando conta de seu corpo, e ele acaba se transformando em uma criatura monstruosa.", "David Cronenberg","Jeff Goldblum, Geena Davis", 1986,"14 anos", "EUA");
+        filme1.exibirDetalhes();
+
+        Documentario documentario1 = new Documentario("Paris is Burning",78,"Uma crônica da cena drag queen nova-iorquina dos anos 1980, focando nos bailes, dança vogue, ambições e sonhos daqueles que proporcionaram calor e vitalidade para uma era.","Jennie Livingston", 1990,"18 anos", "EUA");
+        documentario1.exibirDetalhes();
+
+        midias.add(filme1);
+        midias.add(documentario1);
+        
+        Sessao sessao1 = new Sessao(sala1,filme1, LocalDate.of(2024,07,31), LocalTime.of(16,40));
+        sala1.adicionarSessao(sessao1);
+        sala1.exibirDetalhes();
+        
+    }
+
+    private static void exibirMenuUsuarios(Scanner scanner) {
+        int option;
+        
+        do{
+            
+            System.out.println("\n--- Usuários ---");
+            System.out.println("1. Listar usuários do sistema");
+            System.out.println("2. Visualizar usuário");
+            // Pode ter mais opções
+            System.out.println("0. Voltar");
+            System.out.print("Escolha uma opção: ");
+
+
+            option = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (option) {
+                case 1:
+                    System.out.println("\n--- usuários ativos---");
+                    for (Usuario user : usuarios) { // Aplicação de polimorfismo , neste caso, o usuário pode ser adm ou cliente
+                        System.out.println(" - " + user.getEmail() + " (" + user.getCpf() + ")");
+                    }
+                    break;
+                case 2:
+                    
+                    break;
+                case 0:
+                    System.out.println("Voltando ..."); 
+                    return;
+                default:
+                    System.out.println("Opção inválida. Tente novamente."); 
+            }    
+            
+        } while (option != 0);
+    }  
+}
