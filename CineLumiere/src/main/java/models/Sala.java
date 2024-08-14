@@ -39,6 +39,10 @@ public class Sala {
         sessoes.add(sessao);
     }
 
+    public List<Sessao> getSessoes() {
+        return sessoes;
+    }
+
     public void exibirDetalhes(){
         System.out.println("Sala: " +
                 "\n " + cinema.getNome() +
