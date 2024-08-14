@@ -13,6 +13,8 @@ public class Main {
     private static Cinema cinema_selecionado;
     private static ArrayList<Cinema> cinemas = new ArrayList<>();
     private static ArrayList<Midia> midias = new ArrayList<>();
+    private static ArrayList<Pagamento> pagamentos = new ArrayList<>();
+
 
     public static void main(String[] args) {
         definicoesIniciais(); // Aqui são feitas as definições inicias como cadastro do cinema, salas, adm etc
@@ -254,7 +256,7 @@ public class Main {
                         exibirSessoes(scanner);
                         break;
                     case 2:
-                        // Menu compra de ingresso
+                        exibirMenuCompraIngressos(scanner);
                         break;
                     case 3:
                         exibirMenuCinema(scanner);
@@ -304,15 +306,32 @@ public class Main {
     }
 
     private static void exibirSessoes(Scanner scanner) {
+        if(usuario_logado instanceof Cliente){
+            System.out.println("\n--- Sessões Disponíveis ---");
+            for (Sala sala : cinema_selecionado.getSalas()) {
+                System.out.println("\nSala " + sala.getNumero() + ":");
+                if (sala.getSessoes().isEmpty()) {
+                    System.out.println("Nenhuma sessão disponível.");
+                } else {
+                    for (Sessao sessao : sala.getSessoes()) {
+                        System.out.println(sessao);
+                    }
+                }
+            }
+        }else{
+               for (Cinema cinema : cinemas) {
+                    System.out.println("\nCinema " + cinema.getNome() + ":");
+                    System.out.println("\nSala " + cinema.getSalas() + ":");
+                    for (Sala Sala : cinema.getSalas()) {
+                        System.out.println("\nSala " + Sala.getNumero() + ":");
+                        if (Sala.getSessoes().isEmpty()) {
+                            System.out.println("Nenhuma sessão disponível.");
+                        } else {
+                            for (Sessao sessao : Sala.getSessoes()) {
+                                System.out.println(sessao);
+                            }
+                        }
 
-        System.out.println("\n--- Sessões Disponíveis ---");
-        for (Sala sala : cinema_selecionado.getSalas()) {
-            System.out.println("\nSala " + sala.getNumero() + ":");
-            if (sala.getSessoes().isEmpty()) {
-                System.out.println("Nenhuma sessão disponível.");
-            } else {
-                for (Sessao sessao : sala.getSessoes()) {
-                    System.out.println(sessao);
                 }
             }
         }
@@ -333,7 +352,7 @@ public class Main {
 
             switch (option) {
                 case 1:
-                    // Exibir ingressos do cliente
+                    exibirCompras();
                     break;
                 case 0:
                     System.out.println("Voltando ...");
@@ -350,8 +369,6 @@ public class Main {
     }
 
     private static void exibirMenuCinema(Scanner scanner) {
-
-
         cinema_selecionado = null;
 
         int option;
@@ -487,6 +504,142 @@ public class Main {
             System.out.println("Documentário cadastrado com sucesso!");
         } else {
             System.out.println("Categoria inválida. Mídia não cadastrada.");
+        }
+    }
+
+    private static void exibirMenuCompraIngressos(Scanner scanner) {
+        
+        int option;
+        Sessao sessao_selecionada = null;
+        
+        do {
+            
+            System.out.println("\n--- Selecão de sessão ---");
+            
+            for (int i = 0; i < cinema_selecionado.getSessoes().size(); i++) {
+                Sessao sessao = cinema_selecionado.getSessoes().get(i);
+                System.out.println("\n" + (i + 1) + ". Sala " + sessao.getSala().getNumero() + " - " + sessao.getMidia().getTitulo() + " (" + sessao.getHorario() + " " + sessao.getData() + ")");
+            }
+            
+            System.out.println("0. Voltar");
+            System.out.print("Escolha uma opção: ");
+            
+            option = scanner.nextInt();
+            scanner.nextLine();
+            
+            if(option == 0){
+                System.out.println("Voltando ...");
+                return;
+            }
+            
+            if(option - 1 > cinema_selecionado.getSessoes().size() || option < 0){
+                System.out.println("\nOpção inválida. Tente novamente.");
+            } else {
+                sessao_selecionada = cinema_selecionado.getSessoes().get(option - 1);
+            }
+        } while (sessao_selecionada == null);
+        
+        System.out.println("\n Sessão Selecionada: " + sessao_selecionada.toString() + "\n");
+        
+        Poltrona poltrona_selecionada = null;
+        
+        do {
+            
+            System.out.println("\n--- Selecão de poltrona ---");
+            
+            sessao_selecionada.exibirPoltronas();
+            
+            System.out.println("0. Voltar");
+            System.out.print("Escolha uma opção: ");
+            
+            option = scanner.nextInt();
+            scanner.nextLine();
+            
+            if(option == 0){
+                sessao_selecionada = null;
+                System.out.println("Voltando ...");
+                return;
+            }
+            
+            if(option < 0 || option > sessao_selecionada.getPoltronas().size()){
+                System.out.println("\nOpção inválida. Tente novamente.");
+            } else {
+                Poltrona poltrona = sessao_selecionada.getPoltronas().get(option - 1);
+                if(poltrona.isDisponivel()){
+                    poltrona_selecionada = poltrona; 
+                    poltrona_selecionada.setDisponivel(false);
+                } else {
+                   System.out.println("\nPoltrona indisponível"); 
+                }
+            }
+            
+        } while (poltrona_selecionada == null);
+        
+        System.out.println("\n Poltrona Selecionada: " + poltrona_selecionada.getCodigo() + "\n");
+        
+        String metodo_pagamento = "";
+        
+        do {
+            
+            System.out.println("\n--- Método de pagamento ---");
+        
+            System.out.println("\nValor do ingresso: R$ 5\n");
+            
+            System.out.println("1. PIX");
+            System.out.println("2. Credito");    
+            System.out.println("0. Voltar");
+            System.out.print("Escolha uma opção: ");
+            
+            option = scanner.nextInt();
+            scanner.nextLine();
+            
+            switch (option) {
+                case 1:
+                    metodo_pagamento = "PIX";
+                    break;
+                case 2:
+                    metodo_pagamento = "Crédito";
+                    break;
+                case 0:
+                    sessao_selecionada = null;
+                    poltrona_selecionada = null;
+                    System.out.println("Voltando ...");
+                    return;
+                default:
+                    System.out.println("Opção inválida. Tente novamente.");
+            }
+            
+        } while (metodo_pagamento == "");
+        
+        Ingresso ingresso = new Ingresso(Integer.parseInt(poltrona_selecionada.getCodigo()),sessao_selecionada, poltrona_selecionada, 5);
+        
+        ArrayList<Ingresso> ingressos = new ArrayList<>();
+        
+        ingressos.add(ingresso);
+        
+        Pagamento pagamento = new Pagamento(5, (Cliente) usuario_logado, ingressos, metodo_pagamento);
+        
+        pagamentos.add(pagamento);
+        
+        Cliente cliente = (Cliente) usuario_logado;
+        
+        cliente.getCompras().add(ingresso);
+        
+        System.out.println("\nCompra efetuada com sucesso!\n");
+    }
+
+    private static void exibirCompras() {
+        System.out.println("\n--- Ingressos comprados ---");
+        
+        Cliente cliente = (Cliente) usuario_logado;
+        
+        for (Ingresso ingresso : cliente.getCompras()) {
+            Sessao sessao = ingresso.getSessao();
+            System.out.println("Título: " + sessao.getMidia().getTitulo());
+            System.out.println("Data: " + sessao.getData());
+            System.out.println("Horário: " + sessao.getHorario());
+            System.out.println("Sala: " + sessao.getSala().getNumero());
+            System.out.println("----------------------");
         }
     }
 }

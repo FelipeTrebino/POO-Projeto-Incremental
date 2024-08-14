@@ -39,6 +39,13 @@ public class Poltrona {
     public void setAcessivel(boolean acessivel) {
         this.acessivel = acessivel;
     }
+
+    @Override
+    public String toString() {
+        return "Poltrona{" + "codigo=" + codigo + ", disponivel=" + disponivel + ", acessivel=" + acessivel + '}';
+    }
+    
+    
     
     
 }

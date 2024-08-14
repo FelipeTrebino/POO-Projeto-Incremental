@@ -41,6 +41,16 @@ public class Cinema {
     public void setSalas(List<Sala> salas) {
         this.salas = salas;
     }
+    
+    public ArrayList<Sessao> getSessoes(){
+        ArrayList<Sessao> sessoes = new ArrayList<>();
+        for (Sala sala : this.salas){
+            for (Sessao sessao : sala.getSessoes()){
+                sessoes.add(sessao);
+            }
+        }
+        return sessoes;
+    }
 
     public void exibirDetalhes(){
         System.out.println("Cinema: " + nome +

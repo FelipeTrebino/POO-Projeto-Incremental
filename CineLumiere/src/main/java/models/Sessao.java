@@ -28,7 +28,7 @@ public class Sessao {
             this.poltronas.add(new Poltrona(String.valueOf(i + 1), true, false));
         }
         for(int i = 0; i < quantidadePoltronasAcessiveis; i++){
-            this.poltronas.add(new Poltrona(String.valueOf(quantidadePoltronas + i + 1), true, false));
+            this.poltronas.add(new Poltrona(String.valueOf(quantidadePoltronas + i + 1), true, true));
         }
     }
 
@@ -43,7 +43,7 @@ public class Sessao {
         // Lógica para criar as poltronas de cada sessão
         
         for(int i = 0; i < Sessao.quantidadePoltronas; i++){
-            this.poltronas.add(new Poltrona(String.valueOf(i + 1), true, true));
+            this.poltronas.add(new Poltrona(String.valueOf(i + 1), true, false));
         }
         for(int i = 0; i < Sessao.quantidadePoltronasAcessiveis; i++){
             this.poltronas.add(new Poltrona(String.valueOf(Sessao.quantidadePoltronas + i + 1), true, true));
@@ -85,6 +85,25 @@ public class Sessao {
     public ArrayList<Poltrona> getPoltronas() {
         return poltronas;
     }
+
+    public void exibirPoltronas() {
+    int colunas = 10; // Número de poltronas por fila
+    char rowLabel = 'A';
+    
+    for (int i = 0; i < poltronas.size(); i++) {
+        if (i % colunas == 0 && i != 0) {
+            System.out.println(); // Quebra de linha para nova fila
+            rowLabel++;
+        }
+        Poltrona poltrona = poltronas.get(i);
+        String status = poltrona.isDisponivel() ? "( )" : "(X)";
+        if (poltrona.isAcessivel()) {
+            status = poltrona.isDisponivel() ? "(A)" : "(X)";
+        }
+        System.out.print(poltrona.getCodigo() + status + " ");
+    }
+    System.out.println(); // Quebra de linha final
+}
 
     
     @Override
