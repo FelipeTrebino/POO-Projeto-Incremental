@@ -261,6 +261,7 @@ public class Main {
             } else {
                 // Opções para o administrador
                 System.out.println("\n--- Sessões ---");
+                System.out.println("- " + cinema_selecionado.getNome() + " -");
                 System.out.println("1. Exibir sessões");
                 System.out.println("2. Cadastrar sessão");
                 System.out.println("3. Gerenciar sessões");
