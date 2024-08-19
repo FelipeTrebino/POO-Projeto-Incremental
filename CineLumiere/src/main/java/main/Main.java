@@ -3,6 +3,7 @@ package main;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import models.*;
 
@@ -279,7 +280,7 @@ public class Main {
                         exibirMenuCadastroSessao(scanner);
                         break;
                     case 3:
-                        // Opção para gerenciar sessões (alterar/excluir)
+                        exibirMenuGerenciamentoSessoes(scanner);
                         break;
                     case 0:
                         System.out.println("Voltando ...");
@@ -359,6 +360,57 @@ public class Main {
         salaSelecionada.adicionarSessao(novaSessao);
 
         System.out.println("Sessão cadastrada com sucesso!");
+    }
+
+    private static void exibirMenuGerenciamentoSessoes(Scanner scanner) {
+        System.out.println("\n--- Gerenciamento de Sessões ---");
+
+        exibirSessoes(scanner);
+        List<Sessao> todasSessoes = new ArrayList<>();
+        for (Sala sala : cinema_selecionado.getSalas()) {
+            todasSessoes.addAll(sala.getSessoes());
+        }
+        if (todasSessoes.isEmpty()) {
+            System.out.println("Nenhuma sessão disponível para gerenciamento.");
+            return;
+        }
+        System.out.print("Escolha a sessão que deseja gerenciar: ");
+        int numeroSessao = scanner.nextInt();
+        scanner.nextLine();
+
+        if (numeroSessao <= 0 || numeroSessao > todasSessoes.size()) {
+            System.out.println("Número de sessão inválido.");
+            return;
+        }
+        Sessao sessaoSelecionada = todasSessoes.get(numeroSessao - 1);
+
+        System.out.print("Opções: \n1 - Excluir sessão \n2 - Alterar sessão\n");
+        System.out.println("Escolha o que gostaria de fazer: ");
+        int escolha = scanner.nextInt();
+        scanner.nextLine();
+
+        if (escolha == 1) {
+            Sala salaDaSessao = sessaoSelecionada.getSala();
+            salaDaSessao.removerSessao(sessaoSelecionada);
+            System.out.println("Sessão excluída com sucesso!");
+        } else if (escolha == 2) {
+            System.out.println("\n--- Alterar Sessão ---");
+
+            System.out.print("Informe a nova data da sessão (ano-mês-dia, por exemplo 2024-07-31): ");
+            String novaDataInput = scanner.nextLine();
+            LocalDate novaData = LocalDate.parse(novaDataInput);
+
+            System.out.print("Informe o novo horário da sessão (HH:mm, por exemplo 16:40): ");
+            String novoHorarioInput = scanner.nextLine();
+            LocalTime novoHorario = LocalTime.parse(novoHorarioInput);
+
+            sessaoSelecionada.setData(novaData);
+            sessaoSelecionada.setHorario(novoHorario);
+
+            System.out.println("Sessão alterada com sucesso para " + novaData + " às " + novoHorario + "!");
+        } else {
+            System.out.println("Opção inválida. Voltando ao menu.");
+        }
     }
 
     private static void exibirMenuIngressos(Scanner scanner) {
